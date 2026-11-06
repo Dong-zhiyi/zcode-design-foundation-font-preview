@@ -74,20 +74,21 @@ npx -y serve -l 8731 .
 
 ## 字体清单与授权
 
-| 字体 | 来源 | 授权 | 是否开源 |
-|---|---|---|---|
-| 阿里巴巴普惠体 3.0（4 字重） | `fonts/`（随附） | 官方免费商用 | **否** |
-| Noto Sans SC / Noto Serif SC（思源黑体 / 宋体） | `fonts/`（随附） | SIL OFL 1.1 | 是 |
-| Inter / IBM Plex Sans / Geist / Public Sans / Space Grotesk / DM Sans / Manrope / JetBrains Mono | `font.onmicrosoft.cn`（运行时加载） | SIL OFL 1.1 | 是 |
-| 系统字体（苹方 / 微软雅黑） | 操作系统 | 不可分发，仅作对照 | — |
-| 本页面（HTML / CSS / JS） | 本项目 | 未经许可请勿转载 | **否** |
+| 字体 | 来源 | 授权 | 是否开源 | 官网 |
+|---|---|---|---|---|
+| 阿里巴巴普惠体 3.0（4 字重） | `fonts/`（随附） | 官方免费商用 | **否** | [alibabafonts.com](https://www.alibabafonts.com) |
+| Noto Sans SC / Noto Serif SC（思源黑体 / 宋体） | `fonts/`（随附） | SIL OFL 1.1 | 是 | [notofonts/noto-cjk](https://github.com/notofonts/noto-cjk) |
+| Inter / IBM Plex Sans / Geist / Public Sans / Space Grotesk / DM Sans / Manrope / JetBrains Mono | `font.onmicrosoft.cn`（运行时加载） | SIL OFL 1.1 | 是 | [fontsource.org](https://fontsource.org) · [Google Fonts](https://fonts.google.com) |
+| 系统字体（苹方 / 微软雅黑） | 操作系统 | 不可分发，仅作对照 | — | — |
+| 本页面（HTML / CSS / JS） | 本项目 | 未经许可请勿转载 | **否** | — |
 
 ### 授权说明
 
 - **阿里巴巴普惠体 3.0**：全球永久免费正版商用。3.0 版法律声明已**删除** 1.0/2.0 里「不得上传、发布、转载字体文件」的条款；现行禁止事项为：逆向 / 破解取源码、删改法律声明、单独定价出售 / 出租 / 出借 / 转让 / 转授权、发布暗示与阿里存在合作背书的不实信息。
   - 自行托管（自有服务器、内网）风险很低；公开 CDN 或随产品分发前，请核对官方现行声明。
-  - 官方声明：https://www.alibabafonts.com
-- **思源黑体 / 思源宋体**：SIL OFL 1.1，可随产品分发（保留授权文件即可）。
+  - 官方声明：[alibabafonts.com](https://www.alibabafonts.com)
+- **思源黑体 / 思源宋体**：SIL OFL 1.1，可随产品分发（保留授权文件即可）。项目地址：[github.com/notofonts/noto-cjk](https://github.com/notofonts/noto-cjk)
+- **8 个拉丁字体**：SIL OFL 1.1。字体包来自 [fontsource.org](https://fontsource.org)，原始发布方是 [Google Fonts](https://fonts.google.com)。
 
 ---
 
@@ -119,11 +120,13 @@ index.html?alibaba=https%3A%2F%2Fcdn.example.com%2Ffonts%2F
 A：删掉 `fonts/NotoSansSC-VF.ttf` 和 `fonts/NotoSerifSC-VF.ttf`（合计 42MB），页面里这两个字体会自动回退到系统字体，其余不受影响。
 
 **Q：`font.onmicrosoft.cn` 是什么？为什么页面要依赖它？**
-A：它是一个 **npm 镜像站**（和 unpkg 同类），代理 `@fontsource/*` 系列包。Fontsource 把 Google Fonts 里的开源字体打包成 npm 包，所以从镜像取到的就是**官方字体文件**——不是本站自制、也没有二次修改，只是换了个国内能稳定访问的域名。
+A：它是一个 **npm 镜像站**（和 unpkg 同类），代理 `@fontsource/*` 系列包。Fontsource 把 [Google Fonts](https://fonts.google.com) 里的开源字体打包成 npm 包，所以从镜像取到的就是**官方字体文件**——不是本站自制、也没有二次修改，只是换了个国内能稳定访问的域名。
 
-之所以走它：8 个拉丁字体不打进项目（省体积），页面首次打开时按固定版本去取（如 `@fontsource-variable/inter@5.2.5`），之后走浏览器缓存。取到的是 **latin 子集**（每个约 100–300 KB），不含中文字形；中文由本项目 `fonts/` 提供，两者不重叠。
-
-镜像打不开时会自动回退到系统字体，页面不会报错、也不会卡住。想彻底离线或换源，把 `index.html` 顶部 `<style>` 里对应的 `@font-face` 的 `src` 改成本地文件或自己的 CDN 地址即可。
+- 镜像地址：[font.onmicrosoft.cn](https://font.onmicrosoft.cn) · 字体包：[fontsource.org](https://fontsource.org)
+- 8 个拉丁字体不打进项目（省体积），页面首次打开时按固定版本去取（如 `@fontsource-variable/inter@5.2.5`），之后走浏览器缓存
+- 取到的是 **latin 子集**（每个约 100–300 KB），不含中文字形；中文由本项目 `fonts/` 提供，两者不重叠
+- 镜像打不开时会自动回退到系统字体，页面不会报错、也不会卡住
+- 想彻底离线或换源：把 `index.html` 顶部 `<style>` 里对应的 `@font-face` 的 `src` 改成本地文件或自己的 CDN 地址即可
 
 ---
 

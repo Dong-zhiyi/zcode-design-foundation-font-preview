@@ -151,6 +151,10 @@
   .src-note ul { margin: 0; padding-left: 18px; font-size: 12px; color: var(--ink-2); line-height: 1.9; }
   .src-note li strong { color: var(--ink); }
   .src-note code { background: #efe9dc; padding: 1px 5px; border-radius: 4px; font-size: 11px; }
+  .about a { color: var(--accent); text-decoration: none; word-break: break-all; }
+  .about a:hover { text-decoration: underline; }
+  .about a:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .about td .sub { display: block; margin-top: 5px; font-size: 11px; color: var(--ink-3); }
   footer { padding: 30px 24px; text-align: center; font-size: 11px; color: var(--ink-3); line-height: 1.8; }
 </style>
 <script>
@@ -252,9 +256,9 @@
 
     <h3>字体来源</h3>
     <table>
-      <tr><td>阿里巴巴普惠体 3.0（4 个字重）</td><td>本项目 <code>fonts/</code> 目录随附</td></tr>
-      <tr><td>Noto Sans SC / Noto Serif SC（思源黑体 / 思源宋体）</td><td>本项目 <code>fonts/</code> 目录随附</td></tr>
-      <tr><td>Inter / IBM Plex Sans / Geist / Public Sans / Space Grotesk / DM Sans / Manrope / JetBrains Mono</td><td>页面运行时从 <code>font.onmicrosoft.cn</code> 实时加载，见下方说明</td></tr>
+      <tr><td>阿里巴巴普惠体 3.0（4 个字重）</td><td>本项目 <code>fonts/</code> 目录随附<span class="sub">官网：<a href="https://www.alibabafonts.com" target="_blank" rel="noopener">alibabafonts.com</a></span></td></tr>
+      <tr><td>Noto Sans SC / Noto Serif SC（思源黑体 / 思源宋体）</td><td>本项目 <code>fonts/</code> 目录随附<span class="sub">官网：<a href="https://github.com/notofonts/noto-cjk" target="_blank" rel="noopener">github.com/notofonts/noto-cjk</a></span></td></tr>
+      <tr><td>Inter / IBM Plex Sans / Geist / Public Sans / Space Grotesk / DM Sans / Manrope / JetBrains Mono</td><td>页面运行时从 <code>font.onmicrosoft.cn</code> 实时加载，见下方说明<span class="sub">字体来源：<a href="https://fontsource.org" target="_blank" rel="noopener">fontsource.org</a> · <a href="https://fonts.google.com" target="_blank" rel="noopener">Google Fonts</a></span></td></tr>
       <tr><td>系统字体（苹方 / 微软雅黑）</td><td>操作系统自带，仅作对照，不可分发</td></tr>
     </table>
 
@@ -262,10 +266,12 @@
       <div class="t">关于 <code>font.onmicrosoft.cn</code>（8 个拉丁字体的来源）</div>
       <p>
         它是一个 <strong>npm 镜像站</strong>（和 unpkg 同类），代理 <code>@fontsource/*</code> 系列包。
-        Fontsource 把 Google Fonts 里的开源字体打包成 npm 包，所以从镜像取到的就是<strong>官方字体文件</strong>——
-        这些字体不是本站自制的，也没有经过二次修改，只是换了一个国内能稳定访问的域名。
+        Fontsource 把 <a href="https://fonts.google.com" target="_blank" rel="noopener">Google Fonts</a> 里的开源字体打包成 npm 包，
+        所以从镜像取到的就是<strong>官方字体文件</strong>——这些字体不是本站自制的，也没有经过二次修改，
+        只是换了一个国内能稳定访问的域名。
       </p>
       <ul>
+        <li><strong>镜像地址</strong>：<a href="https://font.onmicrosoft.cn" target="_blank" rel="noopener">font.onmicrosoft.cn</a> · 字体包来自 <a href="https://fontsource.org" target="_blank" rel="noopener">fontsource.org</a></li>
         <li><strong>按需实时加载</strong>：这 8 个拉丁字体不打进项目，页面首次打开时按固定版本去取（例如 <code>@fontsource-variable/inter@5.2.5</code>），之后走浏览器缓存</li>
         <li><strong>取的是 latin 子集</strong>（每个约 100–300 KB），不含中文字形；中文由本项目 <code>fonts/</code> 提供，两者不重叠</li>
         <li><strong>失效会自动降级</strong>：镜像打不开时这 8 个字体回退到系统字体，页面不会报错、也不会卡住</li>
@@ -275,9 +281,9 @@
 
     <h3>是否开源 / 授权</h3>
     <table>
-      <tr><td>阿里巴巴普惠体 3.0</td><td><strong>免费商用，但非开源</strong>。官方「全球永久免费正版商用」；禁止逆向破解取源码、删改法律声明、单独定价出售 / 出租 / 转让 / 转授权、发布暗示与阿里有合作背书的不实信息</td></tr>
-      <tr><td>思源黑体 / 思源宋体</td><td><strong>开源</strong> · SIL OFL 1.1，可随产品分发</td></tr>
-      <tr><td>8 个拉丁字体</td><td><strong>开源</strong> · SIL OFL 1.1，可随产品分发</td></tr>
+      <tr><td>阿里巴巴普惠体 3.0</td><td><strong>免费商用，但非开源</strong>。官方「全球永久免费正版商用」；禁止逆向破解取源码、删改法律声明、单独定价出售 / 出租 / 转让 / 转授权、发布暗示与阿里有合作背书的不实信息<span class="sub">官方声明：<a href="https://www.alibabafonts.com" target="_blank" rel="noopener">alibabafonts.com</a></span></td></tr>
+      <tr><td>思源黑体 / 思源宋体</td><td><strong>开源</strong> · SIL OFL 1.1，可随产品分发<span class="sub"><a href="https://github.com/notofonts/noto-cjk" target="_blank" rel="noopener">github.com/notofonts/noto-cjk</a></span></td></tr>
+      <tr><td>8 个拉丁字体</td><td><strong>开源</strong> · SIL OFL 1.1，可随产品分发<span class="sub"><a href="https://fontsource.org" target="_blank" rel="noopener">fontsource.org</a> · <a href="https://fonts.google.com" target="_blank" rel="noopener">Google Fonts</a></span></td></tr>
       <tr><td>本页面（HTML / CSS / JS）</td><td><strong>非开源</strong>，属 design-foundation 项目，未经许可请勿转载</td></tr>
     </table>
 
@@ -287,14 +293,15 @@
       <li>部署时 <code>index.html</code> 与 <code>fonts/</code> 必须放在<strong>同一目录</strong>（页面用相对路径 <code>./fonts/...</code> 加载）</li>
       <li>想换字体来源：<code>index.html?alibaba=https%3A%2F%2Fcdn.example.com%2Ffonts%2F</code>（值需 encodeURIComponent）</li>
       <li>想减小体积：删掉两个 Noto 字体（合计 42MB），页面会自动回退系统字体，其余不受影响</li>
-      <li>阿里巴巴普惠体 3.0 起已允许自行托管；公开 CDN 或随产品分发前，请核对官方现行法律声明</li>
+      <li>阿里巴巴普惠体 3.0 起已允许自行托管；公开 CDN 或随产品分发前，请核对<a href="https://www.alibabafonts.com" target="_blank" rel="noopener">官方现行法律声明</a></li>
     </ul>
   </section>
   </div>
 </main>
 
 <footer>
-  <strong>字体授权</strong>：阿里巴巴普惠体 3.0 — 官方免费商用（非开源）· 思源黑体 / 宋体与 8 个拉丁字体 — SIL OFL 1.1（开源）· 本页面 — 非开源，未经许可勿转载
+  <strong>字体授权</strong>：阿里巴巴普惠体 3.0 — 官方免费商用（非开源）· 思源黑体 / 宋体与 8 个拉丁字体 — SIL OFL 1.1（开源）· 本页面 — 非开源，未经许可勿转载<br>
+  官网：<a href="https://www.alibabafonts.com" target="_blank" rel="noopener">alibabafonts.com</a> · <a href="https://github.com/notofonts/noto-cjk" target="_blank" rel="noopener">notofonts/noto-cjk</a> · <a href="https://fontsource.org" target="_blank" rel="noopener">fontsource.org</a>
 </footer>
 
 <script>
