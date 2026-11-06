@@ -164,8 +164,8 @@
  *   2. 页面同级 fonts/ 目录（默认，本项目已随附 4 个 woff2）
  *   3. 都没有 → 回退系统字体（苹方 / 微软雅黑）
  *
- * 注意：本页必须通过 http(s) 访问。浏览器把 file:// 页面视为不透明来源，
- * 会拦截 @font-face 加载任何本地字体（含同目录）——详见 README。
+ * 注意：直接双击打开也能看，但多数浏览器会拦截 file:// 下的本地字体加载
+ * （详见页面底部「注意事项」），想看真实字形请用 http(s) 访问。
  */
 (function () {
   var ALI_PREFIX = 'AlibabaPuHuiTi-3-';
@@ -283,7 +283,7 @@
 
     <h3>注意事项</h3>
     <ul>
-      <li><strong>必须通过 http(s) 访问，不要双击 index.html。</strong>浏览器把 <code>file://</code> 页面视为不透明来源（origin: null），会拦截加载<strong>任何</strong>本地字体文件——包括和页面同目录的（CVE-2019-11730 之后的 Chrome / Edge / Firefox 都这样）</li>
+      <li><strong>直接双击 index.html 也能打开</strong>，页面布局、样张都正常显示；但<strong>自定义字体能否加载取决于浏览器</strong>——多数浏览器把 <code>file://</code> 页面视为不透明来源（origin: null），会拦截 <code>@font-face</code> 加载本地字体（含同目录，CVE-2019-11730 之后的 Chrome / Edge / Firefox 都这样）。此时中文字体回退到系统字体，8 个拉丁字体走 CDN 不受影响；想看真实字形，在本目录起个服务用 http(s) 打开</li>
       <li>部署时 <code>index.html</code> 与 <code>fonts/</code> 必须放在<strong>同一目录</strong>（页面用相对路径 <code>./fonts/...</code> 加载）</li>
       <li>想换字体来源：<code>index.html?alibaba=https%3A%2F%2Fcdn.example.com%2Ffonts%2F</code>（值需 encodeURIComponent）</li>
       <li>想减小体积：删掉两个 Noto 字体（合计 42MB），页面会自动回退系统字体，其余不受影响</li>

@@ -6,7 +6,8 @@
 - **所属项目**：design-foundation（设计基座）· 平台 / 技术栈 / 风格 / 架构 / 字体 / 图标的选型工作流
 - **插件集成**：ZCode 插件 `design-foundation` 的配置项 `font_preview_url` 填上面那个地址即可
 
-> 页面是自包含的：内联 CSS 与 JS，无构建步骤、无外部依赖，`index.html` 与 `fonts/` 一起部署即可。
+> 页面是单文件的：内联 CSS 与 JS，无构建步骤，`index.html` 与 `fonts/` 一起部署即可。
+> 唯一的外链是 8 个拉丁字体走 CDN（见下方[字体清单](#字体清单与授权)）。
 
 ---
 
@@ -31,7 +32,12 @@ zcode-design-foundation-font-preview/
 
 ### 本地预览
 
-在本目录起一个静态服务，然后打开 `http://127.0.0.1:<端口>/index.html`：
+**方式一：直接双击 `index.html`** —— 页面能正常打开，布局、对比网格、样张都能看。
+唯一差别是字体：多数浏览器会拦截 `file://` 下的字体加载（原因见下方[常见问题](#常见问题)），此时中文字体回退到系统字体。
+
+**方式二：起个本地服务（推荐，能看到真实字形）**
+
+在本目录执行：
 
 ```bash
 # Python
@@ -41,7 +47,7 @@ python -m http.server 8731
 npx -y serve -l 8731 .
 ```
 
-> ⚠️ **不要直接双击 `index.html` 打开** —— 见下方[常见问题](#常见问题)。
+然后打开 `http://127.0.0.1:8731/index.html`。
 
 ### 部署到服务器
 
@@ -87,8 +93,18 @@ npx -y serve -l 8731 .
 
 ## 常见问题
 
+**Q：直接双击 `index.html` 能打开吗？**
+A：能。页面布局、对比网格、样张都正常显示。唯一的差别在字体：多数浏览器（Chrome / Edge / Firefox）把 `file://` 页面视为不透明来源（origin: null），会拦截 `@font-face` 加载本地字体——包括和页面同目录的（CVE-2019-11730 之后的行为），此时中文字体和阿里字体会回退到系统字体。8 个拉丁字体走 CDN，不受影响。
+
 **Q：为什么字体显示不出来，或者跟系统字体一样？**
-A：多半是直接用 `file://` 打开了页面。浏览器把 `file://` 页面视为不透明来源（origin: null），会拦截 `@font-face` 加载**任何**本地字体文件——包括和页面同目录的（CVE-2019-11730 之后的 Chrome / Edge / Firefox 都这样）。请通过 http(s) 访问。
+A：接上一条——是 `file://` 打开导致的。在项目目录起个服务，用 `http://127.0.0.1:<端口>/index.html` 打开就能看到真实字形：
+
+```bash
+python -m http.server 8731      # Python
+npx -y serve -l 8731 .          # Node
+```
+
+如果换了浏览器、或者带了 `--allow-file-access-from-files` 启动，`file://` 下也能加载本地字体——但这属于非默认配置，不要依赖它。
 
 **Q：想换一批字体源怎么办？**
 A：URL 参数覆盖，不用改代码：
@@ -97,7 +113,7 @@ A：URL 参数覆盖，不用改代码：
 index.html?alibaba=https%3A%2F%2Fcdn.example.com%2Ffonts%2F
 ```
 
-也支持站点内相对路径（`/fonts/`）和本地绝对路径（会转成 `file://`，仅在页面本身也是 `file://` 时有意义，但会受上述 CORS 限制）。
+也支持站点内相对路径（`/fonts/`）和本地绝对路径（会转成 `file://`，仅当页面本身也是 `file://` 打开时才有意义；此时能不能加载取决于浏览器，见上一条）。
 
 **Q：仓库 / 页面体积太大，能瘦吗？**
 A：删掉 `fonts/NotoSansSC-VF.ttf` 和 `fonts/NotoSerifSC-VF.ttf`（合计 42MB），页面里这两个字体会自动回退到系统字体，其余不受影响。
