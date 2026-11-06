@@ -3,9 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>字体示例预览 · design-foundation</title>
+<meta name="description" content="design-foundation 字体样张页：13 个候选字体的在线预览与对比，含字重、字号、中英文与数字效果。">
+<meta name="color-scheme" content="light">
+<title>字体样张页 · design-foundation</title>
 <style>
-  /* 本地字体（已随 skill 分发，离线可用） */
+  /* ============ 字体声明 ============ */
+
+  /* 思源黑体 / 思源宋体：来自本项目 fonts/ 目录，随页面一起部署 */
   @font-face {
     font-family: 'Noto Sans SC';
     src: url('fonts/NotoSansSC-VF.ttf') format('truetype');
@@ -19,8 +23,8 @@
     font-display: swap;
   }
 
-  /* 拉丁字体：font.onmicrosoft.cn —— 国内可访问的字体专用镜像（ Fontsource 包）
-     字体文件与 CSS 同域，一次请求即可，无需下载到本地 */
+  /* 8 个拉丁字体：运行时从 font.onmicrosoft.cn 加载（Fontsource 的 npm 镜像，国内可访问）。
+     字体文件与页面同域一次请求，不占用本项目体积；字体授权见 README。 */
   @font-face { font-family: 'Inter';          src: url('https://font.onmicrosoft.cn/@fontsource-variable/inter@5.2.5/files/inter-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
   @font-face { font-family: 'IBM Plex Sans';  src: url('https://font.onmicrosoft.cn/@fontsource-variable/ibm-plex-sans@5.2.5/files/ibm-plex-sans-latin-wght-normal.woff2') format('woff2'); font-weight: 100 700; font-display: swap; }
   @font-face { font-family: 'Geist';          src: url('https://font.onmicrosoft.cn/@fontsource-variable/geist@5.2.5/files/geist-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
@@ -30,9 +34,8 @@
   @font-face { font-family: 'Manrope';        src: url('https://font.onmicrosoft.cn/@fontsource-variable/manrope@5.2.5/files/manrope-latin-wght-normal.woff2') format('woff2'); font-weight: 200 800; font-display: swap; }
   @font-face { font-family: 'JetBrains Mono'; src: url('https://font.onmicrosoft.cn/@fontsource-variable/jetbrains-mono@5.2.5/files/jetbrains-mono-latin-wght-normal.woff2') format('woff2'); font-weight: 100 800; font-display: swap; }
 
-  /* 阿里巴巴普惠体 3.0 —— @font-face 不写死，由 head 里的脚本按「字体来源」动态注入。
-     来源：?alibaba=<URL 或目录>  >  本目录的 fonts/  >  系统字体（苹方 / 微软雅黑）
-     授权：3.0 起为全球永久免费商用（见 fonts/README.md），自行托管字体文件时请遵守其法律声明。 */
+  /* 阿里巴巴普惠体 3.0 的 @font-face 不在这里写死，
+     而是由下方 <head> 里的脚本按「字体来源」动态注入（见脚本注释）。 */
 
   :root {
     --bg: #f7f5f0;
@@ -86,8 +89,14 @@
     padding: 6px 12px; border: 1px solid var(--line); border-radius: 16px;
     background: #fff; font-size: 12px; cursor: pointer; color: var(--ink-2);
     user-select: none;
+    font-family: inherit; line-height: normal;   /* button 重置 */
   }
   .chip.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .chip:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  #loading { padding: 60px 24px; text-align: center; color: var(--ink-2); }
+  #loading .t { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+  #loading .s { font-size: 12px; }
   .size-ctl { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-2); }
   .size-ctl input { width: 110px; }
 
@@ -139,32 +148,41 @@
   footer { padding: 30px 24px; text-align: center; font-size: 11px; color: var(--ink-3); line-height: 1.8; }
 </style>
 <script>
-/* 阿里巴巴普惠体 3.0 的 @font-face 注入。
+/* 阿里巴巴普惠体 3.0 —— 动态注入 @font-face
+ * ------------------------------------------------------------------
+ * 字体来源（优先级从高到低）：
+ *   1. URL 参数 ?alibaba=<base>（值需 encodeURIComponent）
+ *        · https://cdn.example.com/fonts/   换成别的字体源
+ *        · /fonts/                          站点内的相对路径
+ *        · C:\fonts\alibaba\                本地绝对路径（会转成 file://）
+ *   2. 页面同级 fonts/ 目录（默认，本项目已随附 4 个 woff2）
+ *   3. 都没有 → 回退系统字体（苹方 / 微软雅黑）
  *
- * 默认：页面同级 fonts/ 目录——本项目已随附 4 个 woff2，部署到服务器后开箱即用。
- *
- * 可选覆盖（URL 参数 ?alibaba=<base>，值需 encodeURIComponent）：
- *   https://cdn.example.com/fonts/   换用别的字体源
- *   /fonts/                          站点内的相对路径
- *   C:\fonts\alibaba\                会转成 file://，仅当页面本身也是 file:// 打开时才有意义，
- *                                    但浏览器会因 CORS 拦截本地字体——所以请始终把本项目
- *                                    部署成 http(s) 访问，不要双击 index.html 打开。
+ * 注意：本页必须通过 http(s) 访问。浏览器把 file:// 页面视为不透明来源，
+ * 会拦截 @font-face 加载任何本地字体（含同目录）——详见 README。
  */
 (function () {
+  var ALI_PREFIX = 'AlibabaPuHuiTi-3-';
+
+  // 解析 ?alibaba=，返回可直接拼进 url() 的基地址
   function resolveBase() {
     var raw = new URLSearchParams(location.search).get('alibaba');
     if (!raw) return 'fonts';
-    raw = raw.replace(/[\\/]+$/, '');
-    if (/^https?:\/\//i.test(raw)) return raw;              // 服务器地址
-    // 页面跑在 http(s) 上时，"/x" 是站点根下的相对路径（本地服务就是这么传的）
-    if (location.protocol === "http:" || location.protocol === "https:") {
-      if (raw.charAt(0) === "/") return raw;
+    raw = raw.replace(/[\\/]+$/, '');                    // 去掉结尾分隔符
+
+    if (/^https?:\/\//i.test(raw)) return raw;            // 已是完整 URL
+
+    // 页面在 http(s) 上时，"/x" 是站点根下的相对路径
+    if (/^https?:$/.test(location.protocol) && raw.charAt(0) === '/') return raw;
+
+    // Windows 绝对路径（盘符 / UNC）→ file:// URL
+    if (/^[a-zA-Z]:[\\/]/.test(raw) || raw.indexOf('\\\\') === 0) {
+      return 'file:///' + raw.replace(/\\/g, '/').replace(/^\//, '');
     }
-    if (/^[a-zA-Z]:[\\/]/.test(raw) || raw.indexOf("\\\\") === 0) {
-      return "file:///" + raw.replace(/\\/g, "/").replace(/^\//, "");   // Windows 盘符 / UNC
-    }
-    if (raw.charAt(0) === "/") return "file://" + raw;      // POSIX 绝对路径
-    return raw;                                             // 相对路径
+
+    if (raw.charAt(0) === '/') return 'file://' + raw;    // POSIX 绝对路径
+
+    return raw;                                           // 相对路径
   }
 
   var base = resolveBase();
@@ -174,14 +192,15 @@
     ['65-Medium', '500'],
     ['75-SemiBold', '600 700']
   ];
+
   var css = WEIGHTS.map(function (w) {
     return "@font-face{font-family:'Alibaba PuHuiTi';" +
-      "src:url('" + base + "/AlibabaPuHuiTi-3-" + w[0] + ".woff2') format('woff2');" +
+      "src:url('" + base + '/' + ALI_PREFIX + w[0] + ".woff2') format('woff2');" +
       "font-weight:" + w[1] + ";font-display:swap;}";
   }).join('\n');
 
   var style = document.createElement('style');
-  style.setAttribute('data-ali-font-base', base);
+  style.setAttribute('data-ali-font-base', base);   // 供状态栏显示来源
   style.textContent = css;
   document.head.appendChild(style);
 })();
@@ -191,31 +210,31 @@
 
 <header>
   <div>
-    <h1>字体示例预览</h1>
+    <h1>字体样张页</h1>
     <div class="sub">design-foundation · 选型工具</div>
   </div>
-  <div id="status">正在加载字体…</div>
+  <div id="status" role="status" aria-live="polite">正在加载字体…</div>
 </header>
 
 <div class="bar">
-  <input type="text" id="customText" value="春花秋月何时了" placeholder="输入你的文案预览…">
-  <div class="chips" id="chips">
-    <div class="chip on" data-f="all">全部</div>
-    <div class="chip" data-f="cn">中文</div>
-    <div class="chip" data-f="latin">英文</div>
-    <div class="chip" data-f="mono">等宽</div>
+  <input type="text" id="customText" value="春花秋月何时了" placeholder="输入你的文案预览…" aria-label="自定义预览文案">
+  <div class="chips" id="chips" role="group" aria-label="按类型筛选">
+    <button type="button" class="chip on" data-f="all">全部</button>
+    <button type="button" class="chip" data-f="cn">中文</button>
+    <button type="button" class="chip" data-f="latin">英文</button>
+    <button type="button" class="chip" data-f="mono">等宽</button>
   </div>
   <div class="size-ctl">
-    对比字号 <input type="range" id="size" min="18" max="52" value="30">
+    对比字号 <input type="range" id="size" min="18" max="52" value="30" aria-label="对比字号">
   </div>
 </div>
 
 <main>
-  <div id="loading" style="padding:60px 24px;text-align:center;color:var(--ink-2)">
-    <div style="font-size:15px;font-weight:600;margin-bottom:10px">字体加载中…</div>
-    <div style="font-size:12px">首次加载需要从 font.onmicrosoft.cn 取字体文件，请稍候</div>
+  <div id="loading">
+    <div class="t">字体加载中…</div>
+    <div class="s">首次加载需要从 font.onmicrosoft.cn 取字体文件，请稍候</div>
   </div>
-  <div id="content" style="display:none">
+  <div id="content" class="hidden">
   <h2>快速对比</h2>
   <div id="grid"></div>
 
@@ -302,8 +321,8 @@ async function loadFonts() {
   status.textContent = '✓ ' + localCount + ' 个本地字体 + 8 个在线字体（已就绪）'
     + (ali ? ' · 阿里字体来源：' + ali : '');
   status.className = 'ok';
-  loading.style.display = 'none';
-  content.style.display = '';
+  loading.classList.add('hidden');
+  content.classList.remove('hidden');
   render();
 }
 
