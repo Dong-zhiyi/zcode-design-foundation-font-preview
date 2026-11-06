@@ -102,8 +102,12 @@ index.html?alibaba=https%3A%2F%2Fcdn.example.com%2Ffonts%2F
 **Q：仓库 / 页面体积太大，能瘦吗？**
 A：删掉 `fonts/NotoSansSC-VF.ttf` 和 `fonts/NotoSerifSC-VF.ttf`（合计 42MB），页面里这两个字体会自动回退到系统字体，其余不受影响。
 
-**Q：拉丁字体为什么加载慢？**
-A：它们不在项目里，是运行时从 `font.onmicrosoft.cn`（Fontsource 的 npm 镜像）取的，首次加载需要一点时间。
+**Q：`font.onmicrosoft.cn` 是什么？为什么页面要依赖它？**
+A：它是一个 **npm 镜像站**（和 unpkg 同类），代理 `@fontsource/*` 系列包。Fontsource 把 Google Fonts 里的开源字体打包成 npm 包，所以从镜像取到的就是**官方字体文件**——不是本站自制、也没有二次修改，只是换了个国内能稳定访问的域名。
+
+之所以走它：8 个拉丁字体不打进项目（省体积），页面首次打开时按固定版本去取（如 `@fontsource-variable/inter@5.2.5`），之后走浏览器缓存。取到的是 **latin 子集**（每个约 100–300 KB），不含中文字形；中文由本项目 `fonts/` 提供，两者不重叠。
+
+镜像打不开时会自动回退到系统字体，页面不会报错、也不会卡住。想彻底离线或换源，把 `index.html` 顶部 `<style>` 里对应的 `@font-face` 的 `src` 改成本地文件或自己的 CDN 地址即可。
 
 ---
 
