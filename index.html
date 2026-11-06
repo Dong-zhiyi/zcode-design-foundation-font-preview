@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字体示例预览 · design-foundation</title>
+<style>
+  /* 本地字体（已随 skill 分发，离线可用） */
+  @font-face {
+    font-family: 'Noto Sans SC';
+    src: url('fonts/NotoSansSC-VF.ttf') format('truetype');
+    font-weight: 100 900;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Noto Serif SC';
+    src: url('fonts/NotoSerifSC-VF.ttf') format('truetype');
+    font-weight: 100 900;
+    font-display: swap;
+  }
+
+  /* 拉丁字体：font.onmicrosoft.cn —— 国内可访问的字体专用镜像（ Fontsource 包）
+     字体文件与 CSS 同域，一次请求即可，无需下载到本地 */
+  @font-face { font-family: 'Inter';          src: url('https://font.onmicrosoft.cn/@fontsource-variable/inter@5.2.5/files/inter-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+  @font-face { font-family: 'IBM Plex Sans';  src: url('https://font.onmicrosoft.cn/@fontsource-variable/ibm-plex-sans@5.2.5/files/ibm-plex-sans-latin-wght-normal.woff2') format('woff2'); font-weight: 100 700; font-display: swap; }
+  @font-face { font-family: 'Geist';          src: url('https://font.onmicrosoft.cn/@fontsource-variable/geist@5.2.5/files/geist-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+  @font-face { font-family: 'Public Sans';    src: url('https://font.onmicrosoft.cn/@fontsource-variable/public-sans@5.2.5/files/public-sans-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+  @font-face { font-family: 'Space Grotesk';  src: url('https://font.onmicrosoft.cn/@fontsource-variable/space-grotesk@5.2.5/files/space-grotesk-latin-wght-normal.woff2') format('woff2'); font-weight: 300 700; font-display: swap; }
+  @font-face { font-family: 'DM Sans';        src: url('https://font.onmicrosoft.cn/@fontsource-variable/dm-sans@5.2.5/files/dm-sans-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+  @font-face { font-family: 'Manrope';        src: url('https://font.onmicrosoft.cn/@fontsource-variable/manrope@5.2.5/files/manrope-latin-wght-normal.woff2') format('woff2'); font-weight: 200 800; font-display: swap; }
+  @font-face { font-family: 'JetBrains Mono'; src: url('https://font.onmicrosoft.cn/@fontsource-variable/jetbrains-mono@5.2.5/files/jetbrains-mono-latin-wght-normal.woff2') format('woff2'); font-weight: 100 800; font-display: swap; }
+
+  /* 阿里巴巴普惠体 3.0 —— @font-face 不写死，由 head 里的脚本按「字体来源」动态注入。
+     来源：?alibaba=<URL 或目录>  >  本目录的 fonts/  >  系统字体（苹方 / 微软雅黑）
+     授权：3.0 起为全球永久免费商用（见 fonts/README.md），自行托管字体文件时请遵守其法律声明。 */
+
+  :root {
+    --bg: #f7f5f0;
+    --surface: #ffffff;
+    --ink: #1a1a1a;
+    --ink-2: #6b6b6b;
+    --ink-3: #9a958c;
+    --line: #e5dfd2;
+    --accent: #8c1d18;
+    --gold: #c9a227;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(247,245,240,.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 24px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  header h1 { margin: 0; font-size: 17px; font-weight: 700; }
+  header .sub { font-size: 12px; color: var(--ink-2); }
+  #status {
+    margin-left: auto; font-size: 12px; padding: 5px 10px;
+    border-radius: 20px; background: #efe9dc; color: var(--ink-2);
+  }
+  #status.ok { background: #e6f4ea; color: #1a7f4b; }
+  #status.warn { background: #fdf3e0; color: #a86a00; }
+
+  .bar {
+    padding: 16px 24px; border-bottom: 1px solid var(--line);
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+    background: var(--surface);
+  }
+  .bar input[type=text] {
+    flex: 1; min-width: 240px; padding: 9px 12px;
+    border: 1px solid var(--line); border-radius: 8px;
+    font-size: 14px; background: #fff; color: var(--ink);
+  }
+  .bar input[type=text]:focus { outline: none; border-color: var(--gold); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    padding: 6px 12px; border: 1px solid var(--line); border-radius: 16px;
+    background: #fff; font-size: 12px; cursor: pointer; color: var(--ink-2);
+    user-select: none;
+  }
+  .chip.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .size-ctl { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-2); }
+  .size-ctl input { width: 110px; }
+
+  main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+  h2 { font-size: 13px; color: var(--ink-2); margin: 28px 0 12px; letter-spacing: .5px; }
+
+  /* 对比网格 */
+  #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+  .cell {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 16px;
+  }
+  .cell .meta { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+  .cell .idx {
+    font-size: 11px; color: var(--accent); font-weight: 700;
+    background: #f6ecea; padding: 2px 7px; border-radius: 10px;
+  }
+  .cell .name { font-size: 13px; font-weight: 600; }
+  .cell .lic { margin-left: auto; font-size: 10px; color: var(--ink-3); }
+  .cell .sample { line-height: 1.4; word-break: break-word; }
+
+  /* 详细卡片 */
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 22px; margin-bottom: 16px;
+  }
+  .card-head { display: flex; align-items: baseline; gap: 10px; padding-bottom: 14px; border-bottom: 1px solid var(--line); margin-bottom: 18px; flex-wrap: wrap; }
+  .card-head .idx { font-size: 12px; color: var(--accent); font-weight: 700; background: #f6ecea; padding: 3px 9px; border-radius: 10px; }
+  .card-head .name { font-size: 15px; font-weight: 700; }
+  .card-head .en { font-size: 12px; color: var(--ink-3); }
+  .card-head .lic { margin-left: auto; font-size: 11px; color: var(--ink-2); }
+  .row { margin-bottom: 16px; }
+  .row:last-child { margin-bottom: 0; }
+  .lbl { font-size: 11px; color: var(--ink-3); margin-bottom: 5px; letter-spacing: .3px; }
+  .spec { line-height: 1.5; word-break: break-word; }
+  .weights { display: flex; gap: 20px; flex-wrap: wrap; }
+  .witem { }
+  .witem .wl { font-size: 10px; color: var(--ink-3); margin-bottom: 3px; }
+  .note { font-size: 12px; color: #a86a00; background: #fdf6e6; padding: 8px 12px; border-radius: 8px; margin-top: 12px; }
+  .hidden { display: none !important; }
+  .about { margin-top: 48px; border-top: 1px solid var(--line); padding-top: 28px; }
+  .about h3 { margin: 22px 0 10px; font-size: 14px; color: var(--ink); }
+  .about table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .about td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.65; }
+  .about td:first-child { width: 34%; color: var(--ink-2); }
+  .about code { background: #efe9dc; padding: 1px 5px; border-radius: 4px; font-size: 11px; }
+  .about ul { margin: 0; padding-left: 20px; font-size: 12px; color: var(--ink-2); line-height: 1.95; }
+  .about li strong { color: var(--ink); }
+  footer { padding: 30px 24px; text-align: center; font-size: 11px; color: var(--ink-3); line-height: 1.8; }
+</style>
+<script>
+/* 阿里巴巴普惠体 3.0 的 @font-face 注入。
+ *
+ * 默认：页面同级 fonts/ 目录——本项目已随附 4 个 woff2，部署到服务器后开箱即用。
+ *
+ * 可选覆盖（URL 参数 ?alibaba=<base>，值需 encodeURIComponent）：
+ *   https://cdn.example.com/fonts/   换用别的字体源
+ *   /fonts/                          站点内的相对路径
+ *   C:\fonts\alibaba\                会转成 file://，仅当页面本身也是 file:// 打开时才有意义，
+ *                                    但浏览器会因 CORS 拦截本地字体——所以请始终把本项目
+ *                                    部署成 http(s) 访问，不要双击 index.html 打开。
+ */
+(function () {
+  function resolveBase() {
+    var raw = new URLSearchParams(location.search).get('alibaba');
+    if (!raw) return 'fonts';
+    raw = raw.replace(/[\\/]+$/, '');
+    if (/^https?:\/\//i.test(raw)) return raw;              // 服务器地址
+    // 页面跑在 http(s) 上时，"/x" 是站点根下的相对路径（本地服务就是这么传的）
+    if (location.protocol === "http:" || location.protocol === "https:") {
+      if (raw.charAt(0) === "/") return raw;
+    }
+    if (/^[a-zA-Z]:[\\/]/.test(raw) || raw.indexOf("\\\\") === 0) {
+      return "file:///" + raw.replace(/\\/g, "/").replace(/^\//, "");   // Windows 盘符 / UNC
+    }
+    if (raw.charAt(0) === "/") return "file://" + raw;      // POSIX 绝对路径
+    return raw;                                             // 相对路径
+  }
+
+  var base = resolveBase();
+  var WEIGHTS = [
+    ['45-Light', '300'],
+    ['55-Regular', '400'],
+    ['65-Medium', '500'],
+    ['75-SemiBold', '600 700']
+  ];
+  var css = WEIGHTS.map(function (w) {
+    return "@font-face{font-family:'Alibaba PuHuiTi';" +
+      "src:url('" + base + "/AlibabaPuHuiTi-3-" + w[0] + ".woff2') format('woff2');" +
+      "font-weight:" + w[1] + ";font-display:swap;}";
+  }).join('\n');
+
+  var style = document.createElement('style');
+  style.setAttribute('data-ali-font-base', base);
+  style.textContent = css;
+  document.head.appendChild(style);
+})();
+</script>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>字体示例预览</h1>
+    <div class="sub">design-foundation · 选型工具</div>
+  </div>
+  <div id="status">正在加载字体…</div>
+</header>
+
+<div class="bar">
+  <input type="text" id="customText" value="春花秋月何时了" placeholder="输入你的文案预览…">
+  <div class="chips" id="chips">
+    <div class="chip on" data-f="all">全部</div>
+    <div class="chip" data-f="cn">中文</div>
+    <div class="chip" data-f="latin">英文</div>
+    <div class="chip" data-f="mono">等宽</div>
+  </div>
+  <div class="size-ctl">
+    对比字号 <input type="range" id="size" min="18" max="52" value="30">
+  </div>
+</div>
+
+<main>
+  <div id="loading" style="padding:60px 24px;text-align:center;color:var(--ink-2)">
+    <div style="font-size:15px;font-weight:600;margin-bottom:10px">字体加载中…</div>
+    <div style="font-size:12px">首次加载需要从 font.onmicrosoft.cn 取字体文件，请稍候</div>
+  </div>
+  <div id="content" style="display:none">
+  <h2>快速对比</h2>
+  <div id="grid"></div>
+
+  <h2>详细样张</h2>
+  <div id="cards"></div>
+
+  <section class="about">
+    <h2>字体来源 · 授权 · 注意事项</h2>
+
+    <h3>字体来源</h3>
+    <table>
+      <tr><td>阿里巴巴普惠体 3.0（4 个字重）</td><td>本项目 <code>fonts/</code> 目录随附</td></tr>
+      <tr><td>Noto Sans SC / Noto Serif SC（思源黑体 / 思源宋体）</td><td>本项目 <code>fonts/</code> 目录随附</td></tr>
+      <tr><td>Inter / IBM Plex Sans / Geist / Public Sans / Space Grotesk / DM Sans / Manrope / JetBrains Mono</td><td>运行时从 <code>font.onmicrosoft.cn</code>（Fontsource 镜像）加载</td></tr>
+      <tr><td>系统字体（苹方 / 微软雅黑）</td><td>操作系统自带，仅作对照，不可分发</td></tr>
+    </table>
+
+    <h3>是否开源 / 授权</h3>
+    <table>
+      <tr><td>阿里巴巴普惠体 3.0</td><td><strong>免费商用，但非开源</strong>。官方「全球永久免费正版商用」；禁止逆向破解取源码、删改法律声明、单独定价出售 / 出租 / 转让 / 转授权、发布暗示与阿里有合作背书的不实信息</td></tr>
+      <tr><td>思源黑体 / 思源宋体</td><td><strong>开源</strong> · SIL OFL 1.1，可随产品分发</td></tr>
+      <tr><td>8 个拉丁字体</td><td><strong>开源</strong> · SIL OFL 1.1，可随产品分发</td></tr>
+      <tr><td>本页面（HTML / CSS / JS）</td><td><strong>非开源</strong>，属 design-foundation 项目，未经许可请勿转载</td></tr>
+    </table>
+
+    <h3>注意事项</h3>
+    <ul>
+      <li><strong>必须通过 http(s) 访问，不要双击 index.html。</strong>浏览器把 <code>file://</code> 页面视为不透明来源（origin: null），会拦截加载<strong>任何</strong>本地字体文件——包括和页面同目录的（CVE-2019-11730 之后的 Chrome / Edge / Firefox 都这样）</li>
+      <li>部署时 <code>index.html</code> 与 <code>fonts/</code> 必须放在<strong>同一目录</strong>（页面用相对路径 <code>./fonts/...</code> 加载）</li>
+      <li>想换字体来源：<code>index.html?alibaba=https%3A%2F%2Fcdn.example.com%2Ffonts%2F</code>（值需 encodeURIComponent）</li>
+      <li>想减小体积：删掉两个 Noto 字体（合计 42MB），页面会自动回退系统字体，其余不受影响</li>
+      <li>阿里巴巴普惠体 3.0 起已允许自行托管；公开 CDN 或随产品分发前，请核对官方现行法律声明</li>
+    </ul>
+  </section>
+  </div>
+</main>
+
+<footer>
+  <strong>字体授权</strong>：阿里巴巴普惠体 3.0 — 官方免费商用（非开源）· 思源黑体 / 宋体与 8 个拉丁字体 — SIL OFL 1.1（开源）· 本页面 — 非开源，未经许可勿转载
+</footer>
+
+<script>
+// 阿里字体来源（与 head 里的注入脚本同源）；空字符串表示用页面同级 fonts/
+function aliFontParam() {
+  return new URLSearchParams(location.search).get('alibaba') || '';
+}
+
+const FONTS = [
+  { id: 0, name: '默认字体', en: 'System Stack', css: "-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif", g: null, lic: '系统字体（不可分发）', tag: 'latin' },
+  { id: 1, name: 'Inter', en: 'Inter', css: 'Inter, sans-serif', g: 'Inter:wght@400;500;600;700', lic: 'SIL OFL 1.1', tag: 'latin' },
+  { id: 2, name: 'IBM Plex Sans', en: 'IBM Plex Sans', css: "'IBM Plex Sans', sans-serif", g: null, lic: 'SIL OFL 1.1', tag: 'latin' },
+  { id: 3, name: 'Noto Sans SC（思源黑体）', en: 'Noto Sans SC', css: "'Noto Sans SC', sans-serif", g: null, local: true, lic: 'SIL OFL 1.1', tag: 'cn' },
+  { id: 4, name: 'Noto Serif SC（思源宋体）', en: 'Noto Serif SC', css: "'Noto Serif SC', serif", g: null, local: true, lic: 'SIL OFL 1.1', tag: 'cn' },
+  { id: 5, name: 'Geist', en: 'Geist', css: "Geist, sans-serif", g: null, lic: 'SIL OFL 1.1', tag: 'latin' },
+  { id: 6, name: 'Public Sans', en: 'Public Sans', css: "'Public Sans', sans-serif", g: null, lic: 'SIL OFL 1.1', tag: 'latin' },
+  { id: 7, name: 'Space Grotesk', en: 'Space Grotesk', css: "'Space Grotesk', sans-serif", g: null, lic: 'SIL OFL 1.1', tag: 'latin' },
+  { id: 8, name: 'DM Sans', en: 'DM Sans', css: "'DM Sans', sans-serif", g: null, lic: 'SIL OFL 1.1', tag: 'latin' },
+  { id: 9, name: 'Manrope', en: 'Manrope', css: "Manrope, sans-serif", g: null, lic: 'SIL OFL 1.1', tag: 'latin' },
+  { id: 10, name: 'JetBrains Mono', en: 'JetBrains Mono', css: "'JetBrains Mono', monospace", g: null, lic: 'SIL OFL 1.1', tag: 'mono' },
+  // 「本地」标记：只有走页面同级 fonts/ 时才成立；?alibaba= 指定了外部来源则不标
+  { id: 11, name: '阿里巴巴普惠体', en: 'Alibaba PuHuiTi', css: "'Alibaba PuHuiTi', 'PingFang SC', sans-serif", g: null, local: !aliFontParam(), lic: '官方免费商用（3.0）', tag: 'cn' }
+];
+
+const CN = '春花秋月何时了';
+const CN_BODY = '2026年10月1日 19:30 · 上海 · ¥180 起 · 余票充足';
+const EN = 'The quick brown fox jumps over the lazy dog';
+const NUM = '0123456789 ¥180 ¥280 $99.5 50%';
+const SAMPLE = '追逐光影的人，终将与光同在。The show must go on.';
+
+// 字体通过 @font-face 加载（本地 fonts/ + font.onmicrosoft.cn 镜像；阿里字体来源见 ?alibaba=）
+async function loadFonts() {
+  const status = document.getElementById('status');
+  const loading = document.getElementById('loading');
+  const content = document.getElementById('content');
+  try {
+    // 强制触发所有字体加载，全部就绪后再渲染，避免先显示回退字体
+    await Promise.all(
+      FONTS.map(f => document.fonts.load('700 32px "' + f.en + '"').catch(() => {}))
+    );
+    await document.fonts.ready;
+  } catch (e) { /* 忽略，照样渲染 */ }
+  const localCount = FONTS.filter(f => f.local).length;
+  const ali = aliFontParam();
+  status.textContent = '✓ ' + localCount + ' 个本地字体 + 8 个在线字体（已就绪）'
+    + (ali ? ' · 阿里字体来源：' + ali : '');
+  status.className = 'ok';
+  loading.style.display = 'none';
+  content.style.display = '';
+  render();
+}
+
+let filter = 'all';
+let customText = CN;
+let size = 30;
+
+function render() {
+  const grid = document.getElementById('grid');
+  const cards = document.getElementById('cards');
+  grid.innerHTML = '';
+  cards.innerHTML = '';
+
+  const list = FONTS.filter(f => filter === 'all' || f.tag === filter);
+
+  list.forEach(f => {
+    // 对比格
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.innerHTML =
+      '<div class="meta"><span class="idx">' + f.id + '</span>' +
+      '<span class="name">' + f.name + '</span>' +
+      (f.local ? '<span style="font-size:10px;color:#1a7f4b;background:#e6f4ea;padding:2px 6px;border-radius:8px">本地</span>' : '') +
+      '<span class="lic">' + f.lic + '</span></div>' +
+      '<div class="sample" style="font-family:' + f.css + ';font-size:' + size + 'px;font-weight:500">' +
+      escapeHtml(customText) + '</div>';
+    grid.appendChild(cell);
+
+    // 详细卡片
+    const card = document.createElement('div');
+    card.className = 'card';
+    let html =
+      '<div class="card-head"><span class="idx">' + f.id + '</span>' +
+      '<span class="name">' + f.name + '</span>' +
+      '<span class="en">' + f.en + '</span>' +
+      '<span class="lic">' + f.lic + '</span></div>';
+
+    html += specRow('大标题 · 700', f.css, 34, 700, CN);
+    html += specRow('标题 · 600', f.css, 24, 600, CN);
+    html += specRow('正文 · 400', f.css, 15, 400, SAMPLE);
+    html += specRow('辅助 · 400', f.css, 12, 400, CN_BODY);
+    html += specRow('英文 / 数字', f.css, 20, 500, EN + '　' + NUM);
+
+    html += '<div class="row"><div class="lbl">字重对比（同一文字）</div><div class="weights">' +
+      [400, 500, 600, 700].map(w =>
+        '<div class="witem"><div class="wl">' + w + '</div>' +
+        '<div class="spec" style="font-family:' + f.css + ';font-size:18px;font-weight:' + w + '">' + CN + '</div></div>'
+      ).join('') + '</div></div>';
+
+    if (f.note) html += '<div class="note">⚠ ' + f.note + '</div>';
+
+    card.innerHTML = html;
+    cards.appendChild(card);
+  });
+}
+
+function specRow(label, css, px, w, text) {
+  return '<div class="row"><div class="lbl">' + label + '</div>' +
+    '<div class="spec" style="font-family:' + css + ';font-size:' + px + 'px;font-weight:' + w + '">' +
+    escapeHtml(text) + '</div></div>';
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+document.getElementById('customText').addEventListener('input', e => {
+  customText = e.target.value || CN;
+  render();
+});
+document.getElementById('size').addEventListener('input', e => {
+  size = +e.target.value;
+  render();
+});
+document.getElementById('chips').addEventListener('click', e => {
+  if (!e.target.classList.contains('chip')) return;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  e.target.classList.add('on');
+  filter = e.target.dataset.f;
+  render();
+});
+
+loadFonts();
+</script>
+</body>
+</html>
